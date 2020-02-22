@@ -1,8 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Course implements Comparable<Course>{
+public class Course implements Comparable<Course>, Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private String courseName;
 	private String courseId;
 	private int maxStudents;
@@ -27,12 +30,37 @@ public class Course implements Comparable<Course>{
 		return courseName;
 	}
 	
+	public void setName(String name) {
+		courseName = name;
+	}
+	
 	public String getID() {
 		return courseId;
 	}
 	
+	public void setID(String id) {
+		courseId = id;
+	}
+	
+	public void setMaxStudents(int n) {
+		maxStudents = n;
+	}
+	
+	public void setInstructor(String prof) {
+		instructor = prof;
+	}
+	
+	public void setSection(int n) {
+		sectionNum = n;
+	}
+	
+	public void setLocation(String placeName) {
+		courseLocation = placeName;
+	}
+	
 	public void addStudent(Student s)  {
 		students.add(s);
+		currentNumOfStudents++;
 	}
 	
 	//Iterate through all students, if the matches, remove it

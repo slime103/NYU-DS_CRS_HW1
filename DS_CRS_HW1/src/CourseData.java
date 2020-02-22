@@ -6,12 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Scanner;
 
-public class CourseData implements Serializable{
+public class CourseData{
 
-	private static final long serialVersionUID = 1L;
 	//public static ArrayList<Admin> admins = new ArrayList<Admin>();
 	public static ArrayList<Student> students = new ArrayList<Student>();
 	public static ArrayList<Course> courses = new ArrayList<Course>();
@@ -20,6 +18,7 @@ public class CourseData implements Serializable{
 		
 	}
 	
+	//Tested
 	public static void importCSV() {
 		try {
 			Scanner scan = new Scanner(new File("MyUniversityCourses.csv"));
@@ -38,41 +37,67 @@ public class CourseData implements Serializable{
 			
 			scan.close();
 			
-			System.out.println("Course Data imported from MyUniversityCourses.csv");
+			System.out.println("Course Data imported from MyUniversityCourses.csv\n");
 		} catch (FileNotFoundException e) { 
-			System.out.println("Course Data NOT found!");
+			System.out.println("Course Data NOT found!\n");
 		}
 	}
 	
-	public static void serialize(CourseData cd) {
+	//Tested
+	public static void serialize() {
 		try {
-			FileOutputStream fileOutputStream = new FileOutputStream("CourseData.ser");
+			FileOutputStream fileOutputStream = new FileOutputStream("courses.ser");
 			ObjectOutputStream objOutputStream = new ObjectOutputStream(fileOutputStream);
 			
-			objOutputStream.writeObject(cd);
+			objOutputStream.writeObject(courses);
 			
 			fileOutputStream.close();
 			objOutputStream.close();
 			
 			//Debug
-			System.out.println("CourseData Serializated");
+			System.out.println("Courses Serialized\n");
+			
+			fileOutputStream = new FileOutputStream("students.ser");
+			objOutputStream = new ObjectOutputStream(fileOutputStream);
+			
+			objOutputStream.writeObject(students);
+			
+			fileOutputStream.close();
+			objOutputStream.close();
+			
+			//Debug
+			System.out.println("Students Serialized\n");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void deserialize(CourseData cd) {
+	//Tested
+	@SuppressWarnings("unchecked")
+	public static void deserialize() {
 		try {
-			FileInputStream fileInput = new FileInputStream("Employee.ser");
+			FileInputStream fileInput = new FileInputStream("courses.ser");
 		    ObjectInputStream objInput = new ObjectInputStream(fileInput);
 		    
-		    cd = (CourseData) objInput.readObject();
+		    courses = (ArrayList<Course>) objInput.readObject();
+		    
 		    fileInput.close();
 		    objInput.close();
 		    
 		    //Debug
-		    System.out.println("CourseData Deserialized");
+		    System.out.println("Courses Deserialized\n");
+		    
+		    fileInput = new FileInputStream("students.ser");
+		    objInput = new ObjectInputStream(fileInput);
+		    
+		    students = (ArrayList<Student>) objInput.readObject();
+		    
+		    fileInput.close();
+		    objInput.close();
+		    
+		    //Debug
+		    System.out.println("Students Deserialized\n");
 		} catch (FileNotFoundException e) { 
 			importCSV();
 		} catch (Exception e) {

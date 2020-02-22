@@ -21,6 +21,7 @@ public class User {
 		lastName = names[1];
 	}
 	
+	//Tested
 	public String viewCourses() {
 		String courseList = "";
 		for (Course c : CourseData.courses) {
@@ -28,5 +29,12 @@ public class User {
 		}
 		return courseList;
 	}
+	
+	public void exit() {
+		CourseData.serialize();
+		System.exit(0);
+	}
+	
+	
 	
 }

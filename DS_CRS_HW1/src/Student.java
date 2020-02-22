@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Student extends User implements StudentView, Comparable<Student>{
+public class Student extends User implements StudentView, Comparable<Student>, Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	ArrayList<Course> enrolledCourses = new ArrayList<Course>();
 	
@@ -10,6 +13,15 @@ public class Student extends User implements StudentView, Comparable<Student>{
 		fullName = first + " " + last;
 		username = first + "." + last;
 		password = "$" + last + "$";
+	}
+	
+	public Student login(String username, String password) {
+		for (Student s : CourseData.students) {
+			if (username.contentEquals(s.username) && (password.contentEquals(s.username))) {
+				return s;
+			}
+		}
+		return null;
 	}
 	
 	public String viewOpenCourses() {
@@ -37,11 +49,16 @@ public class Student extends User implements StudentView, Comparable<Student>{
 	}
 	
 	public String viewEnrolledCourses() {
-		String enrolled = "";
-		for (Course c : enrolledCourses) {
-			enrolled += c.getName() + "\n";
+		if (!enrolledCourses.isEmpty()) {
+			String enrolled = "";
+			for (Course c : enrolledCourses) {
+				enrolled += c.getName() + "\n";
+			}
+			return enrolled;
 		}
-		return enrolled;
+		else {
+			return "The student is not enrolled in any courses.\n";
+		}
 	}
 
 	@Override
