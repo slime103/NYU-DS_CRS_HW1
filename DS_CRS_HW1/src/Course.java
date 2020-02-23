@@ -63,10 +63,36 @@ public class Course implements Comparable<Course>, Serializable{
 		currentNumOfStudents++;
 	}
 	
+	public Student findStudent(String name) {
+		if (!students.isEmpty()) {
+			for (Student s : students) {
+				if (s.getName().equalsIgnoreCase(name)) {
+					return s;
+				}
+			}
+			System.out.println("Student not found.");
+			return null;
+		}
+		System.out.println("There are no students in the course selected.");
+		return null;
+	}
+	
+	public boolean hasStudent(String studentName) {
+		if (!students.isEmpty()) {
+			for (Student s : students) {
+				if (s.getName().equalsIgnoreCase(studentName)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
+	
 	//Iterate through all students, if the matches, remove it
 	public void removeStudent(Student s) {
 		for (Student name : students) {
-			if(s.getName().equalsIgnoreCase(name.getName()))
+			if(s.getName().contentEquals(name.getName()))
 				students.remove(s);
 		}
 	}

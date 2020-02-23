@@ -35,6 +35,14 @@ public class User {
 		System.exit(0);
 	}
 	
-	
+	public Course findCourse(String nameOfCourse) {
+		for (Course c : CourseData.courses) {
+			if (c.getName().equalsIgnoreCase(nameOfCourse)) {
+				return c;
+			}
+		}
+		System.out.println("Course does not exist.");
+		return null;
+	}
 	
 }

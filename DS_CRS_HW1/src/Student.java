@@ -34,18 +34,33 @@ public class Student extends User implements StudentView, Comparable<Student>, S
 		return open;
 	}
 	
-	public void registerInCourse(Course c) {
-		if (!c.isCourseFull()) {
-			c.addStudent(this);
-		}
-		else {
-			System.out.println("Sorry, the course you've selected is FULL.");
+	public void registerInCourse(String courseName) {
+		try {
+			Course c = findCourse(courseName);
+			if (!c.isCourseFull()) {
+				c.addStudent(this);
+			}
+			else {
+				System.out.println("Sorry, the course you've selected is FULL.");
+			}
+		} catch (NullPointerException e) {
+			//Course does not exist has been printed
 		}
 	}
 	
-	public void withdraw(Course c) {
-		c.removeStudent(this);
-		System.out.println(fullName + " has been successfully removed from " + c.getName());
+	public void withdraw(String courseName) {
+		try {
+			Course c = findCourse(courseName);
+			if (c.hasStudent(this.getName())) {
+				c.removeStudent(this);
+				System.out.println(fullName + " has been successfully removed from " + c.getName());
+			}
+			else {
+				System.out.println("Student or Course not found.");
+			} 
+		} catch (NullPointerException e){
+			//Course does not exist has been printed
+		}
 	}
 	
 	public String viewEnrolledCourses() {
