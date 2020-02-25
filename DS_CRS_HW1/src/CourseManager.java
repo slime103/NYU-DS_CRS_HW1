@@ -5,7 +5,7 @@ public interface CourseManager {
 	
 	public void deleteCourse(String name);
 	
-	public void editCourse(String name);
+	public void editCourse(String nameOfCourse, int n, String field);
 	
-	public String courseInfo(String name);
+	public String courseInfo(String id);
 }

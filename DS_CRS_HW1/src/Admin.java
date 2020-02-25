@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Admin extends User implements CourseManager {
@@ -12,48 +13,78 @@ public class Admin extends User implements CourseManager {
 		password = "Admin001";
 	}
 	
+	//creates a course and adds it to the master array
 	public void addCourse(String courseName, String id, int max, String prof, int section, String location) {
 		Course c = new Course(courseName, id, max, prof, section, location);
 		CourseData.courses.add(c);
+		System.out.println(c.getName() + " has been created successfully.\n" + c);
 	}
 	
+	//removes course from the master array and removes all enrolled students
 	public void deleteCourse(String name) {
 		for (Course c : CourseData.courses) {
 			if (name.equalsIgnoreCase(c.getName())) {
+				c.unenrollAll();
 				CourseData.courses.remove(c);
-				System.out.println(name + " has been successfully removed.\n");
+				System.out.println(c.getName() + " has been successfully deleted.\n");
 				return;
 			}
 		}
 		System.out.println("Course NOT found.");
 	}
 	
-	public void editCourse(String name) {
-		int n = 0;
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Please enter the number corresponding to the field you would"
-				+ "like to edit.");
-		
-		while (scan.hasNext()) {
-			if (scan.hasNextInt()) {
-				n = scan.hashCode();
+	//Allows you to edit a course based on the specified field given
+	public void editCourse(String nameOfCourse, int n, String field) {
+		try {
+			Course c = findCourse(nameOfCourse);
+			
+			switch (n) {
+				case 1: {
+					c.setName(field);
+					break;
+				}
+				case 2:{
+					c.setID(field);
+					break;
+				}
+				case 3: {
+					try {
+						int a = Integer.parseInt(field);
+						if (a > 0) {
+							c.setMaxStudents(a);
+							System.out.println("Max Students set to " + a + "\n");
+						}
+						else {
+							System.out.println("Max Students must be greater than zero.\n");
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("Invalid integer for Max Students.\n");
+					}
+					break;
+				}				
+				case 4: {
+					c.setInstructor(field);
+				}
+				case 5: {
+					try {
+						int a = Integer.parseInt(field);
+						c.setSection(a);
+					} catch (NumberFormatException e) {
+						System.out.println("Invalid integer for Section Number.\n");
+					}
+					break;
+				}
+				case 6: {
+					c.setLocation(field);
+					break;
+				}
 			}
-			else {
-				System.out.println("Please enter a corresponding Integer value.");
-			}
-		}
-		
-		switch (n) {
-			case 1: 
-				
-			case 2:
-				
-			case 3:
-				
-			case 4:
+		} catch (NullPointerException e) {
+			//Course DNE printed
 		}
 	}
 	
+	//Prints the courses toString given ID
 	public String courseInfo(String id) {
 		for (Course c : CourseData.courses) {
 			if (id.equalsIgnoreCase(c.getID())) {
@@ -63,6 +94,7 @@ public class Admin extends User implements CourseManager {
 		return "Course NOT found.";
 	}
 	
+	//Creates a new student and adds it to the master array
 	public void registerNewStudent(String first, String last) {
 		Student s = new Student(first, last);
 		CourseData.students.add(s);
@@ -70,16 +102,23 @@ public class Admin extends User implements CourseManager {
 	}
 	
 	// Tested
+	// Displays all courses that are full
 	public String viewFullCourses() {
 		String fullCourses = "";
 		for (Course c : CourseData.courses) {
 			if (c.isCourseFull())
 				fullCourses += c.getName() + "\n";
 		}
-		return fullCourses;
+		if (fullCourses.isEmpty()) {
+			return "There are no Full Courses.\n";
+		}
+		else {
+			return fullCourses;
+		}
 	}
 	
 	// Tested
+	// Writes all full courses to file
 	public void writeFullCoursesToFile() {
 		
 		int n = 0;
@@ -97,13 +136,22 @@ public class Admin extends User implements CourseManager {
 			}
 			writer.close();
 			
+			System.out.println("File Successfully Written.\n");
+			
 		} catch (IOException e) {
 			e.getStackTrace();
 		}
 		
 	}
 	
+	//sorts the courses based on the number of students
+	public void sortCourses() {
+		Collections.sort(CourseData.courses);
+		System.out.println("Courses sorted by number of Students.\n");
+	}
+	
 	// Tested
+	// shows all courses by their toString and the students registered in each course
 	public String viewCourses() {
 		String courseList = "";
 		for (Course c : CourseData.courses) {
@@ -112,14 +160,49 @@ public class Admin extends User implements CourseManager {
 		return courseList;
 	}
 	
-	public String studentEnrolledCourses(String name) {
+	// returns the list of students in the master array
+	public String viewStudents() {
+		String studentList = "\nStudents: \n";
 		for (Student s : CourseData.students) {
-			if (name.equalsIgnoreCase(s.getName())) {
-				System.out.println(s.getName() + " is currently enrolled in: ");
-				return s.viewEnrolledCourses();
-			}
+			studentList += s.getName() + "\n";
 		}
-		return "Student NOT found.";
+		return studentList;
+	}
+	
+	// returns a list of the students enrolled courses
+	public String studentEnrolledCourses(String nameOfStudent) {
+		try {
+			Student s = findStudent(nameOfStudent);
+			return s.viewEnrolledCourses();
+		} catch (NullPointerException e) {
+			return "";
+		}
+	}
+	
+	// returns all students in a given course
+	public String studentsInCourse(String nameOfCourse) {
+		try {
+			Course c = findCourse(nameOfCourse);
+			return c.getStudents();
+		} catch (NullPointerException e) {
+			//Course DNE printed
+			return "";
+		}
+	}
+	
+	//finds a student in the master array given its name
+	public Student findStudent(String name) {
+		if (!CourseData.students.isEmpty()) {
+			for (Student s : CourseData.students) {
+				if (s.getName().equalsIgnoreCase(name)) {
+					return s;
+				}
+			}
+			System.out.println("Student not found.\n");
+			return null;
+		}
+		System.out.println("There are no students registered.\n");
+		return null;
 	}
 
 }

@@ -58,11 +58,13 @@ public class Course implements Comparable<Course>, Serializable{
 		courseLocation = placeName;
 	}
 	
+	//Adds a student to the course and increments the number of enrolled students
 	public void addStudent(Student s)  {
 		students.add(s);
 		currentNumOfStudents++;
 	}
 	
+	//finds a student in this course
 	public Student findStudent(String name) {
 		if (!students.isEmpty()) {
 			for (Student s : students) {
@@ -70,13 +72,14 @@ public class Course implements Comparable<Course>, Serializable{
 					return s;
 				}
 			}
-			System.out.println("Student not found.");
+			System.out.println("Student not found.\n");
 			return null;
 		}
-		System.out.println("There are no students in the course selected.");
+		System.out.println("There are no students in the course selected.\n");
 		return null;
 	}
 	
+	//checks if a student exists in the course given their name
 	public boolean hasStudent(String studentName) {
 		if (!students.isEmpty()) {
 			for (Student s : students) {
@@ -89,15 +92,19 @@ public class Course implements Comparable<Course>, Serializable{
 		return false;
 	}
 	
-	//Iterate through all students, if the matches, remove it
+	//Iterate through all students, if the name matches, remove it
 	public void removeStudent(Student s) {
 		for (Student name : students) {
-			if(s.getName().contentEquals(name.getName()))
+			if(s.getName().contentEquals(name.getName())) {
 				students.remove(s);
+				currentNumOfStudents--;
+				return;
+			}
 		}
 	}
 
 	@Override
+	//Compares Based on Number of Students
 	public int compareTo(Course o) {
 		System.out.println();
 		if (currentNumOfStudents < o.currentNumOfStudents) {
@@ -111,21 +118,33 @@ public class Course implements Comparable<Course>, Serializable{
 		}
 	}
 	
+	//returns a list of all the students enrolled in this course
 	public String getStudents() {
-		String studentList = "";
-		Collections.sort(students);
-		for (Student s : students) {
-			studentList += s.getName() + "\n";
+		if (!students.isEmpty()) {
+			String studentList = "Enrolled Students: \n";
+			Collections.sort(students);
+			for (Student s : students) {
+				studentList += s.getName() + "\n";
+			}
+			return studentList;
 		}
-		return studentList;
+			return "There are no students enrolled in this course.\n";
 	}
 	
+	//Checks to see if this course is full
 	public boolean isCourseFull() {
-		if (currentNumOfStudents == maxStudents) {
-			return true;
+		if (currentNumOfStudents < maxStudents) {
+			return false;
 		}
 		else {
-			return false;
+			return true;
+		}
+	}
+	
+	//un-enrolls every student in this course, useful during deletion
+	public void unenrollAll() {
+		for (Student s : students) {
+			s.withdraw(this);
 		}
 	}
 	

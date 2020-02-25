@@ -19,6 +19,8 @@ public class CourseData{
 	}
 	
 	//Tested
+	//Parses the data file storing each line in a string and splits it to store each column of data in the
+	//correct category
 	public static void importCSV() {
 		try {
 			Scanner scan = new Scanner(new File("MyUniversityCourses.csv"));
@@ -44,6 +46,7 @@ public class CourseData{
 	}
 	
 	//Tested
+	//Serializes Course and Student Arrays
 	public static void serialize() {
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream("courses.ser");
@@ -74,6 +77,7 @@ public class CourseData{
 	}
 	
 	//Tested
+	//Deserializes course and students arrays
 	@SuppressWarnings("unchecked")
 	public static void deserialize() {
 		try {
@@ -99,6 +103,7 @@ public class CourseData{
 		    //Debug
 		    System.out.println("Students Deserialized\n");
 		} catch (FileNotFoundException e) { 
+			System.out.println("Importing new Data...\n");
 			importCSV();
 		} catch (Exception e) {
 			e.printStackTrace();
