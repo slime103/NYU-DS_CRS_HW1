@@ -54,8 +54,8 @@ public class CourseRegistrationSystem {
 		
 		//admin.registerNewStudent("Mike", "Lee");
 		
-		System.out.println(student.viewCourses());
-		System.out.println(admin.viewStudents());
+		//System.out.println(student.viewCourses());
+		//System.out.println(admin.viewStudents());
 		
 		//Registration testing
 		//student.registerInCourse("basic algorithms");

@@ -2,10 +2,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Admin extends User implements CourseManager {
 	
+	private static final long serialVersionUID = 1L;
+
 	public Admin() {
 		firstName = "ALANKIRTH";
 		lastName = "KRISHNAN";
